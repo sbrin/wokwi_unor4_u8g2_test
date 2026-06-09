@@ -30,7 +30,13 @@ compile_sketch() {
 }
 
 snapshot_sources() {
-  stat -f '%N:%m' "$SKETCH_FILE"
+  if stat --help >/dev/null 2>&1; then
+    # GNU stat (Linux, Git Bash, MSYS2)
+    stat -c '%n:%Y' "$SKETCH_FILE"
+  else
+    # BSD stat (macOS)
+    stat -f '%N:%m' "$SKETCH_FILE"
+  fi
 }
 
 if ! command -v arduino-cli >/dev/null 2>&1; then
