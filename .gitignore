@@ -1,2 +1,4 @@
-.arduino-build
 .DS_Store
+.pio/
+.arduino-build/
+build/

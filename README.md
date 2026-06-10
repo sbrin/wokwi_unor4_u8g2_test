@@ -1,85 +1,51 @@
-# Arduino Uno / Uno R4 U8g2 Test Project
+# ESP32 U8g2 OLED Test Project
 
-This project contains a test sketch (`unor4_u8g2_test.ino`) that uses the **U8g2** library to draw on an SSD1306 128x64 I2C OLED screen. It includes helper scripts to watch for file changes and automatically compile the sketch, which integrates perfectly with Wokwi's auto-restart feature when local binaries change.
+PlatformIO project for an ESP32 DevKit C V4 connected to an SSD1306 128x64 I2C OLED in Wokwi.
 
-## Prerequisites
+## Wiring
 
-Before running the compile-on-save scripts, you need to install the Arduino CLI:
+The Wokwi diagram uses the standard ESP32 I2C pins:
 
-1. **Install arduino-cli**:
-   - Follow the instructions on the [Arduino CLI Installation Page](https://arduino.github.io/arduino-cli/latest/installation/).
-   - Ensure `arduino-cli` is added to your system's `PATH`.
+- `GPIO21` -> OLED `SDA`
+- `GPIO22` -> OLED `SCL`
+- `3V3` -> OLED `VCC`
+- `GND` -> OLED `GND`
 
-2. **Install Board Core**:
-   - For Arduino Uno (Classic):
-     ```bash
-     arduino-cli core install arduino:avr
-     ```
-   - For Arduino Uno R4 Minima / WiFi:
-     ```bash
-     arduino-cli core install arduino:renesas_uno
-     ```
+## Build
 
-3. **Install U8g2 Library**:
-   ```bash
-   arduino-cli lib install U8g2
-   ```
+Install PlatformIO Core, then run:
 
----
+```bash
+pio run
+```
 
-## Running the Auto-Compile Watcher
+The firmware used by Wokwi is produced at:
 
-Choose the script appropriate for your operating system:
+```text
+.pio/build/esp32dev/firmware.bin
+.pio/build/esp32dev/firmware.elf
+```
 
-### 1. Windows (PowerShell - Recommended)
-A native PowerShell script is provided to watch and build without needing Bash.
+`wokwi.toml` points to those files, so Wokwi will load the PlatformIO build output.
 
-* **Default Run** (compiles for Arduino Uno by default):
-  ```powershell
-  .\watch.ps1
-  ```
-* **Bypassing Execution Policy** (if PowerShell prevents running scripts):
-  ```powershell
-  powershell -ExecutionPolicy Bypass -File .\watch.ps1
-  ```
-* **Compile for Arduino Uno R4 Minima**:
-  ```powershell
-  .\watch.ps1 -Fqbn "arduino:renesas_uno:minima"
-  ```
+## Watch Mode
 
-### 2. Windows (Git Bash / MSYS2 / WSL)
-If you prefer using Bash on Windows:
+To rebuild automatically when source files change:
 
-* **Default Run**:
-  ```bash
-  ./watch.sh
-  ```
-* **Compile for Arduino Uno R4 Minima**:
-  ```bash
-  FQBN=arduino:renesas_uno:minima ./watch.sh
-  ```
+```bash
+chmod +x watch.sh
+./watch.sh
+```
 
-### 3. macOS & Linux (Terminal)
-Use the standard bash watcher script.
+For a single build through the watcher:
 
-1. **Make the script executable** (first-time setup):
-   ```bash
-   chmod +x watch.sh
-   ```
-2. **Run the watcher**:
-   - For Arduino Uno (Default):
-     ```bash
-     ./watch.sh
-     ```
-   - For Arduino Uno R4 Minima:
-     ```bash
-     FQBN=arduino:renesas_uno:minima ./watch.sh
-     ```
+```bash
+ONCE=1 ./watch.sh
+```
 
----
+## Source Layout
 
-## How It Works
-
-* The script monitors the `unor4_u8g2_test.ino` sketch for changes.
-* Upon detecting a change, it compiles the sketch using `arduino-cli` and outputs the resulting binaries (`.hex` / `.elf`) into the `build/` directory.
-* The [wokwi.toml](file:///Users/sun/Documents/Arduino/unor4_u8g2_test/wokwi.toml) configuration points to these build outputs, causing the Wokwi simulator to automatically restart and load the fresh firmware.
+- `platformio.ini` configures the ESP32 PlatformIO environment and the U8g2 dependency.
+- `src/main.cpp` is the PlatformIO entry point.
+- `diagram.json` describes the Wokwi ESP32 + OLED circuit.
+- `unor4_u8g2_test.ino` is left as the original Arduino sketch reference and is not used by PlatformIO.

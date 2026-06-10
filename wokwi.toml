@@ -1,4 +1,4 @@
 [wokwi]
 version = 1
-firmware = 'build/unor4_u8g2_test.ino.hex'
-elf = 'build/unor4_u8g2_test.ino.elf'
+firmware = '.pio/build/esp32dev/firmware.bin'
+elf = '.pio/build/esp32dev/firmware.elf'
